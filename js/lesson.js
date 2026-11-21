@@ -15,8 +15,10 @@ export function initLessons(LESSONS, opt) {
   const base = () => window.__LESSON_URL || 'lessons/index.html?embed=1';
   function open(l, tab = 0) {
     current = l; root.classList.add('open'); chip.style.display = 'none'; document.body.classList.add('lsOpen');
-    const url = base() + '#/' + (l ? 'u/' + l.id + '/' + tab : '');
-    if (fr.dataset.loaded) { try { fr.contentWindow.location.hash = '#/' + (l ? 'u/' + l.id + '/' + tab : ''); return; } catch (e) {} }
+    const path = l === 'tools' ? 'tools' : l ? 'u/' + l.id + '/' + tab : '';
+    if (l === 'tools') current = null;
+    const url = base() + '#/' + path;
+    if (fr.dataset.loaded) { try { fr.contentWindow.location.hash = '#/' + path; return; } catch (e) {} }
     fr.src = url; fr.dataset.loaded = 1;
   }
   function close() { root.classList.remove('open'); document.body.classList.remove('lsOpen'); update(page); }

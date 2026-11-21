@@ -3,6 +3,8 @@ import { AR, keypad, pick } from './mathkit.js';
 import { $, $$, store, pg, star, toast, CTX, mastery, isSolved, problemCard, worked, ansText } from './engine.js';
 import { stepsHTML } from './algebra.js';
 import { CHAPTERS, PAGES } from './toc.js';
+import { tabNafes, tabGames, makePool, openTools, hasNafes, chapterNafesIds } from './play.js';
+let lastGen = null;
 
 keypad();
 const main = $('#main');
@@ -18,6 +20,8 @@ const stripT = s => String(s).replace(/<sup>(.*?)<\/sup>/g, '$1').replace(/<[^>]
 
 /* ══════════ التوجيه ══════════ */
 function route() { const h = location.hash.slice(1) || '/'; const p = h.split('/').filter(Boolean); hideBot();
+  $$('.gstage').forEach(s => { s._stop && s._stop(); s.remove(); }); document.body.classList.remove('gopen');
+  if (p[0] === 'tools') { main.innerHTML = ''; setHead('أدواتُ الصفّ', 'العجلة · الاختيار العشوائي · المجموعات · المؤقّت', '/'); return openTools(lastGen, true); }
   if (p[0] === 'u') return openUnit(decodeURIComponent(p[1]), p[2] || 0); if (p[0] === 'book') { if (EMBED) { toBook(p[1] || 1); history.back(); return; } return openBook(+(p[1] || 1)); } home(); }
 window.addEventListener('hashchange', route);
 const go = h => { if (location.hash === '#' + h) route(); else location.hash = h; };
@@ -28,7 +32,7 @@ function home() {
   setHead('رياضيات الصفّ السادس', 'الجزء الأوّل · كتابٌ تفاعليّ', null); CTX.lesson = null;
   const last = store.get('last'), lm = last && unitMeta(last)[1];
   main.innerHTML = `${lm ? `<a class="resume" href="#/u/${last}">▶ تابعْ من حيثُ توقّفت: <b>${lm.t}</b></a>` : ''}
-    <div class="hgrid"><a class="hcard book" href="#/book/10">📖<b>الكتابُ كاملًا</b><small>${AR(PAGES)} صفحة</small></a><a class="hcard" href="#/u/1-1">🚀<b>الدرسُ الأوّل</b><small>الخطوات الأربع لحلّ المسألة</small></a></div>
+    <div class="hgrid"><a class="hcard book" href="#/book/10">📖<b>الكتابُ كاملًا</b><small>${AR(PAGES)} صفحة</small></a><a class="hcard" href="#/u/1-1">🚀<b>الدرسُ الأوّل</b><small>الخطوات الأربع لحلّ المسألة</small></a><a class="hcard tools" href="#/tools">🎡<b>أدواتُ الصفّ</b><small>العجلة · اختيارٌ عشوائيّ · مجموعات · مؤقّت</small></a></div>
     ${CHAPTERS.map(c => `<section class="chap" style="--c:${c.color}"><div class="chh"><span class="chn">${AR(c.n)}</span><div><b>${c.title}</b><small>ص ${AR(c.pages[0])}–${AR(c.pages[1])}</small></div></div>
       <div class="units">${c.units.map(u => { const d = doneOf(u.id); return `<a class="unit ${u.kind}" href="#/u/${u.id}"><span class="un">${u.kind === 'lesson' ? AR(u.id) : u.kind === 'explore' ? '🔎' : u.kind === 'ext' ? '➕' : '📝'}</span><span class="ut">${u.t}<small>${u.kind === 'explore' ? 'استكشاف · ' : u.kind === 'ext' ? 'توسّع · ' : ''}ص ${AR(u.p[0])}${u.p[1] !== u.p[0] ? '–' + AR(u.p[1]) : ''}</small></span>${d ? `<span class="done">✓ ${AR(d)}</span>` : ''}</a>`; }).join('')}</div></section>`).join('')}
     <footer>تصميم: أ. فهد الشيخي</footer>`;
@@ -49,10 +53,16 @@ async function openUnit(id, tab) {
   if ((U.examples || []).length) T.push(['🧩', 'أمثلة', el => tabExamples(el, U, CH)]);
   if ((U.ex || []).length) T.push(['✍️', U.kind === 'test' ? 'الأسئلة' : 'تدرّب', el => tabPractice(el, U, id)]);
   if ((U.gens || []).length) T.push(['♾️', 'بلا حدود', el => tabInfinite(el, U, CH, id)]);
+  const order = CHAPTERS.flatMap(c => c.units.map(u => u.id));
+  const nIds = meta.kind === 'test' ? (/m$/.test(id) ? chapterNafesIds(C.n).filter(x => order.indexOf(x) < order.indexOf(id)) : /r$/.test(id) ? [] : chapterNafesIds(C.n)) : hasNafes(id) ? [id] : [];
+  if (nIds.length) T.push(['🎯', meta.kind === 'test' ? 'نموذج نافس' : 'نافس', el => tabNafes(el, nIds, { test: meta.kind === 'test' })]);
+  const near = meta.kind === 'explore' || meta.kind === 'ext' ? [order.slice(order.indexOf(id) + 1).find(x => hasNafes(x) && x.startsWith(String(C.n)))].filter(Boolean) : [];
+  const gen = makePool(U, CH, nIds.length ? nIds : near); if (gen) { lastGen = gen; T.push(['🎮', 'ألعاب', el => tabGames(el, gen, id)]); }
   T.push(['📖', 'الصفحات', el => tabPages(el, meta.p)]);
   const tb = $('#tabs'); tb.style.display = ''; tb.innerHTML = T.map((t, i) => `<button data-t="${i}"><span>${t[0]}</span>${t[1]}</button>`).join('');
-  const show = i => { i = Math.max(0, Math.min(i, T.length - 1)); $$('#tabs button').forEach((b, k) => b.classList.toggle('on', k === i)); main.innerHTML = ''; window.scrollTo(0, 0); CTX.cur = null; CTX.onRecord = null; T[i][2](main); history.replaceState(null, '', `#/u/${id}/${i}`); };
+  const show = i => { i = Math.max(0, Math.min(i, T.length - 1)); $$('#tabs button').forEach((b, k) => { b.classList.toggle('on', k === i); if (k === i) try { b.scrollIntoView({ inline: 'nearest', block: 'nearest' }); } catch (e) {} }); main.innerHTML = ''; window.scrollTo(0, 0); CTX.cur = null; CTX.onRecord = null; T[i][2](main); history.replaceState(null, '', `#/u/${id}/${i}`); };
   $$('#tabs button').forEach(b => b.onclick = () => show(+b.dataset.t));
+  const named = { nafes: /نافس/, games: /ألعاب/ }; if (named[tab]) { const k = T.findIndex(t => named[tab].test(t[1])); tab = k < 0 ? 0 : k; }
   if (tab === 'inf') { tab = T.findIndex(t => t[1] === 'بلا حدود'); if (tab < 0) tab = T.findIndex(t => /تدرّب|الأسئلة/.test(t[1])); if (tab < 0) tab = 0; }
   show(+tab || 0);
 }
