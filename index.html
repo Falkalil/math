@@ -187,6 +187,79 @@ body.nt #btnNote{background:#1a4fd0}
 @media (max-width:700px){#noteBar{left:8px;right:8px;transform:none;max-width:none;gap:6px}}
 #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#ffe9c4;font-weight:800;font-size:18px;z-index:100;background:#2a1a0e;transition:opacity .5s}
 @media(max-width:520px){#btnGames{display:none}}
+/* ══ معمل الرياضيات ══ */
+#labLayer{position:fixed;inset:0;z-index:33;pointer-events:none}
+#labLayer>*{position:absolute;pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+#labLayer .drag{filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
+#labDock{position:fixed;left:8px;top:50%;transform:translateY(-55%);z-index:35;display:flex;flex-direction:column;gap:6px;align-items:stretch;font-family:Tajawal,sans-serif}
+#labDock button{font:inherit;border:0;cursor:pointer}
+.labHead{display:flex;flex-direction:column;align-items:center;gap:2px;background:linear-gradient(160deg,#2f8f6a,#1f6b52);color:#fff;border-radius:16px;padding:8px 6px;box-shadow:0 4px 12px rgba(0,0,0,.35);font-size:12px;line-height:1.25;width:74px}
+.labHead span{font-size:26px}.labBtns{display:none;flex-direction:column;gap:5px;background:var(--ui);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:16px;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+#labDock.open .labBtns{display:flex}
+.labBtns button{display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(255,255,255,.08);color:#fff;border-radius:12px;padding:6px 2px;font-size:12px;font-weight:700;width:62px}
+.labBtns button span{font-size:22px;line-height:1.1;font-weight:900}.labBtns button:hover{background:rgba(255,255,255,.2)}.labBtns button.on{background:#fff;color:var(--ink)}
+.labClr{opacity:.85}.labHead .ls{display:none}
+#labTray{position:fixed;left:96px;top:50%;transform:translateY(-55%);z-index:35;width:250px;max-height:80vh;overflow:auto;background:#fffaf0;color:var(--ink);border-radius:18px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;font-family:Tajawal,sans-serif;direction:rtl}
+#labTray.open{display:block}#labTray p{font-size:12.5px;color:#6a5a48;margin:6px 0;line-height:1.6}
+.trT{display:block;font-size:17px;margin-bottom:4px}
+.trRow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.trRow .pc{background:#fff;border:2px solid #e8dcc6;border-radius:12px;padding:6px;cursor:grab;touch-action:none;font:inherit;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:48px}
+.trRow .pc small{font-size:11px;color:#6a5a48}
+.trRow .pc.ctr{width:44px;height:44px;min-width:0;border-radius:50%;padding:0}
+.trRow .pc.tf,.trRow .pc.tf2{font-size:12px}
+.trCnt{background:#f1e7d3;border-radius:12px;padding:8px;text-align:center;font-weight:700;font-size:14px;display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center}
+.trCnt .dv{width:100%;font-size:17px;color:#1f6b52}
+.trBtn{width:100%;border:0;border-radius:12px;padding:8px;background:#2f8f6a;color:#fff;font:inherit;font-weight:800;cursor:pointer;margin:4px 0}
+.seg{display:flex;background:#efe4cf;border-radius:12px;padding:3px;gap:3px}.seg button{flex:1;border:0;border-radius:9px;padding:5px;font:inherit;font-weight:700;background:none;cursor:pointer}.seg button.on{background:#fff;box-shadow:0 1px 3px #0002}
+.labTrash{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) scale(.8);z-index:34;background:#c8102e;color:#fff;border-radius:20px;padding:8px 18px;font-size:28px;display:flex;align-items:center;gap:8px;opacity:0;pointer-events:none;transition:.2s;font-family:Tajawal,sans-serif}
+.labTrash small{font-size:14px;font-weight:700}.labTrash.show{opacity:.9;transform:translateX(-50%) scale(1)}.labTrash.hot{transform:translateX(-50%) scale(1.15);opacity:1}
+.labX{position:absolute;top:-10px;left:-10px;width:26px;height:26px;border-radius:50%;border:0;background:#c8102e;color:#fff;font-size:13px;cursor:pointer;z-index:2;box-shadow:0 2px 4px #0004}
+/* الروليت */
+.labW{background:#fffaf0;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:0 12px 12px;width:260px;font-family:Tajawal,sans-serif;direction:rtl;color:var(--ink)}
+.lwh{cursor:move;margin:0 -12px 8px;padding:8px 12px;background:#2f8f6a;color:#fff;border-radius:18px 18px 0 0;font-weight:800;text-align:center}
+.spWrap svg{width:100%;display:block}.spWrap text{font-family:Tajawal,sans-serif}
+.spRow{display:flex;gap:6px;justify-content:space-between;font-size:13px;font-weight:700;margin:6px 0}.spRow select{font:inherit;border-radius:8px;border:1px solid #d8c8a8;padding:2px}
+.spGo{width:100%;border:0;border-radius:12px;padding:9px;background:#c8102e;color:#fff;font:inherit;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #8a0a1c}
+.spRes{text-align:center;font-weight:700;min-height:22px;margin:6px 0}
+.spTab{width:100%;border-collapse:collapse;font-size:13px;text-align:center}.spTab th,.spTab td{border:1px solid #e0d2b8;padding:3px 2px}.spTab tr:first-child th{font-weight:900}
+/* المسطرة */
+.labRuler{transform-origin:0 30px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.35));cursor:grab;direction:ltr}
+.labRuler svg{display:block}.labRuler text{font:700 13px Tajawal,sans-serif;fill:#3a2f1a;text-anchor:middle}.labRuler text.u{font-size:11px}
+.labRuler button{position:absolute;top:-12px;width:26px;height:26px;border-radius:50%;border:0;background:#2b2117;color:#fff;font-size:15px;cursor:pointer;box-shadow:0 2px 4px #0004}
+.labRuler .rRot{right:-12px;background:#2f8f6a}.labRuler .rZm[data-d="1"]{right:20px}.labRuler .rZm[data-d="-1"]{right:50px}.labRuler .labX{left:-12px}
+/* قطع العد */
+.ctr{width:40px;height:40px;border-radius:50%;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),0 2px 3px rgba(0,0,0,.3)}
+.ctr.r{background:radial-gradient(circle at 35% 30%,#ff9a8a,#d8301a 60%)}.ctr.y{background:radial-gradient(circle at 35% 30%,#fff3a8,#f0b818 60%)}
+.lc.ctr{cursor:grab}
+.tframe{--k:1;display:grid;grid-template-columns:repeat(5,46px);grid-auto-rows:46px;background:#2b2117;gap:2px;padding:2px;border-radius:4px;z-index:1!important}
+.tframe i{background:#fffdf5}.trRow .pc.tf,.trRow .pc.tf2{min-height:44px;justify-content:center}
+/* دينز */
+.dn-p{cursor:grab}
+.dunit{display:block;width:16px;height:16px;background:#f2c230;border:1px solid #a8801a;border-radius:2px;box-shadow:inset -2px -2px 0 rgba(0,0,0,.15)}
+.lc.dunit{width:16px;height:16px}
+.drod{display:grid;grid-template-columns:16px;grid-auto-rows:16px;background:#3a7ae0;border:1px solid #1a4aa8;width:16px}
+.drod i{border-bottom:1px solid rgba(0,0,0,.25)}
+.dflat{display:grid;grid-template-columns:repeat(10,16px);grid-auto-rows:16px;background:#2f9f6a;border:1px solid #1a6a48}
+.dflat i{border:.5px solid rgba(0,0,0,.18)}
+.dcube{display:block;width:54px;height:54px;background:linear-gradient(135deg,#e8503a 0 70%,#a8301a 70%);border:1px solid #8a200a;box-shadow:6px -6px 0 #f08070;margin:6px 6px 0 0}
+.lc.dcube{width:160px;height:160px;background:repeating-linear-gradient(0deg,transparent 0 15px,rgba(0,0,0,.2) 15px 16px),repeating-linear-gradient(90deg,transparent 0 15px,rgba(0,0,0,.2) 15px 16px),#e8503a;box-shadow:16px -16px 0 #f08070,16px -16px 0 1px #8a200a;margin:0}
+.mini.drod{display:block;width:8px;height:50px;background:#3a7ae0}.mini.dflat{display:block;width:44px;height:44px;background:repeating-linear-gradient(90deg,#2f9f6a 0 3.4px,#1a6a48 3.4px 4.4px)}
+/* الكسور */
+.fbar{height:46px;background:var(--c);border:2px solid #fff;outline:1px solid rgba(0,0,0,.25);border-radius:4px;display:grid;place-items:center;color:#fff;font:800 16px Tajawal,sans-serif;cursor:grab;box-sizing:border-box}
+.fcir{width:150px;height:150px;cursor:grab}.fcir svg{transition:transform .25s}.fcir>span{position:absolute;inset:0;display:grid;place-items:center;color:#2b2117;font:800 15px Tajawal,sans-serif;pointer-events:none;text-shadow:0 0 3px #fff,0 0 3px #fff}
+.fcir .fRot{position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;border:0;background:#2b2117;color:#fff;cursor:pointer}
+.nolbl>span{visibility:hidden}
+.trRow.frow .pc{min-width:44px;min-height:44px;background:var(--c);color:#fff;border-color:transparent;justify-content:center}
+#labTray .fr,#labLayer .fr{display:inline-flex;flex-direction:column;align-items:center;line-height:1.05;vertical-align:middle}#labTray .fr b:first-child,#labLayer .fr b:first-child{border-bottom:2px solid currentColor;padding:0 2px}
+@media(max-width:700px){
+  #labDock{left:0;top:42%;transform:translateY(-50%)}
+  .labHead{width:46px;border-radius:0 14px 14px 0;padding:8px 2px;font-size:10px}.labHead .lf{display:none}.labHead .ls{display:block;font-size:9.5px;white-space:nowrap}.labHead span{font-size:20px}
+  #labDock.open .labBtns{position:absolute;left:50px;top:50%;transform:translateY(-50%)}
+  .labBtns button{width:54px;font-size:10.5px;padding:4px 2px}.labBtns button span{font-size:19px}
+  #labTray{left:108px;right:6px;width:auto;top:8px;transform:none;max-height:46vh;padding:10px}
+  #labTray p{display:none}
+}
+body.reading #labDock,body.reading #labTray{display:none}
 </style>
 </head>
 <body>

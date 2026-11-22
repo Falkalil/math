@@ -4,6 +4,7 @@ import { BOOK, TOC, MODELS, LESSONS as LZ, toPdf, toPrinted } from './data.js';
 const LESSONS = LZ;
 import { initLessons } from './lesson.js';
 import { initPractice } from './practice.js';
+import { initLab } from './lab.js';
 
 const BUILD = {};
 const PW = BOOK.w, PH = BOOK.h, AR = PW / PH, N = BOOK.pages;
@@ -496,6 +497,7 @@ function openModelById(id) {
 }
 const LS = initLessons(LESSONS, { src, PW, PH, goTo: n => { if (lifted) closeModel(); setTimeout(() => goTo(toPdf(n)), lifted ? 800 : 0); }, openModel: openModelById, closeModel: () => { if (lifted) closeModel(); } });
 const PR = initPractice(LESSONS, { open: (l, t) => LS.open(l, t) });
+const LAB = initLab();
 onPage = n => LS.update(n);
 $('#btnLesson').onclick = () => { const l = LESSONS.find(x => cur >= x.from && cur <= x.to); LS.open(l || null); };
 $('#tocList').insertAdjacentHTML('afterbegin', `<div class="unit" style="background:#c8102e">🎓 الدروسُ التفاعليّة</div><div class="ti ch" data-lesson="-1"><span>🏠 فهرسُ الدروسِ التفاعليّة</span><b></b></div>`);
