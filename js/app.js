@@ -500,7 +500,7 @@ const PR = initPractice(LESSONS, { open: (l, t) => LS.open(l, t) });
 const LAB = initLab();
 onPage = n => LS.update(n);
 $('#btnLesson').onclick = () => { const l = LESSONS.find(x => cur >= x.from && cur <= x.to); LS.open(l || null); };
-$('#tocList').insertAdjacentHTML('afterbegin', `<div class="unit" style="background:#c8102e">🎓 الدروسُ التفاعليّة</div><div class="ti ch" data-lesson="-1"><span>🏠 فهرسُ الدروسِ التفاعليّة</span><b></b></div>`);
+$('#tocList').insertAdjacentHTML('afterbegin', `<div class="unit" style="background:#c8102e">🎓 الدروسُ التفاعليّة</div><div class="ti ch" data-lesson="-1"><span>🏠 فهرسُ الدروسِ التفاعليّة</span><b></b></div><a class="ti" href="grade5/" style="text-decoration:none;color:inherit"><span>📗 رياضيات الصف الخامس</span><b>↗</b></a>`);
 $('#tocList').addEventListener('click', e => { const it = e.target.closest('[data-lesson]'); if (!it) return; e.stopPropagation(); closeDrawers(); LS.open(+it.dataset.lesson < 0 ? null : LESSONS[+it.dataset.lesson]); }, true);
 
 layout(); render();
