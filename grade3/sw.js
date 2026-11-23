@@ -1,5 +1,5 @@
 // يعمل الكتاب دون إنترنت: كلُّ ملفٍّ يُحفظ في الذاكرة المؤقتة ويُقدَّم منها
-const CACHE = 'math3-book-v2';
+const CACHE = 'math3-book-v3';
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./precache.json", "./lessons/index.html", "./lessons/fonts/tajawal.css", "./lessons/js/algebra.js", "./lessons/js/app.js", "./lessons/js/ch1.js", "./lessons/js/ch2.js", "./lessons/js/ch3.js", "./lessons/js/ch4.js", "./lessons/js/ch5.js", "./lessons/js/engine.js", "./lessons/js/kit3.js", "./lessons/js/kit4.js", "./lessons/js/kit5.js", "./lessons/js/kitM.js", "./lessons/js/mathkit.js", "./lessons/js/nafes.js", "./lessons/js/play.js", "./lessons/js/stats.js", "./lessons/js/toc.js", "./fonts/tajawal.css", "./js/app.js", "./js/data.js", "./js/kit.js", "./js/lab.js", "./js/lesson.js", "./js/offline.js", "./js/practice.js", "./js/three.module.min.js", "./js/addons/controls/OrbitControls.js"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(CORE.map(u => c.add(u)))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
