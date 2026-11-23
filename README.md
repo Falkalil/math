@@ -1,5 +1,11 @@
 # كتب الرياضيات التفاعلية – الفصل الدراسي الأول
 
+## الصف الثاني الابتدائي
+
+- **الكتاب:** https://falkalil.github.io/math/grade2/
+- **الدروس التفاعلية وحدها:** https://falkalil.github.io/math/grade2/lessons/
+- **نسخة بملفٍّ واحد تعمل دون إنترنت:** [download/math2-offline.html](download/math2-offline.html)
+
 ## الصف الثالث الابتدائي
 
 - **الكتاب:** https://falkalil.github.io/math/grade3/
