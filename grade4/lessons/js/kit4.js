@@ -32,3 +32,16 @@ export const tf = (tag, text, v, o = {}) => ch(tag, text, ['✓ صحيحة', '�
 /** خطواتُ حلِّ المسألةِ الأربع */
 export const FOUR = (f, k, h, t) => T2(['الخطوة', ''], [['افهمْ', f], ['خطّطْ', k], ['حُلَّ', h], ['تحقّقْ', t]]);
 export { A, MX, T2, KB, r10, words, wordQ, expQ, expHTML, cmpS, sortedStr, roundQ, roundTo, placeQ, pvTable };
+
+/* ═════════ الصفّ الثالث ═════════ */
+/** نمطٌ عدديٌّ فيه فراغات: arr يحوي null مكانَ المجهول */
+export const seqQ = (tag, arr, step, o = {}) => { const miss = arr.map((x, i) => x === null ? i : -1).filter(i => i >= 0); const full = arr.map((x, i) => x === null ? arr.find(v => v !== null) + (i - arr.findIndex(v => v !== null)) * step : x);
+  const show = arr.map(x => x === null ? '■' : AR(x)).join('، ');
+  return fld(tag, o.text || `${show} — حدّدِ النمطَ، ثم اكتبِ العددَ المناسبَ في ■`, miss.map((i, k) => [miss.length > 1 ? `■ ${['الأوّل', 'الثاني', 'الثالث', 'الرابع'][k]}` : '■', full[i]]), { skill: 'pat', sol: [`النمط: ${step > 0 ? 'نضيفُ ' + AR(step) : 'نطرحُ ' + AR(-step)} في كلِّ مرّة.`, full.map(AR).join('، ')], ...o }); };
+/** قطعةٌ من لوحةِ المئة (من اليمينِ إلى اليسار): cells = [[صف، عمود، قيمة أو null]] */
+export const hundredQ = (tag, cells, o = {}) => { const base = cells.find(c => c[2] !== null); const val = ([r, c]) => base[2] + (r - base[0]) * 10 + (c - base[1]);
+  const R = Math.max(...cells.map(c => c[0])) + 1, C = Math.max(...cells.map(c => c[1])) + 1; let h = '<table class="tb" style="direction:rtl;margin:6px auto;font-size:18px">'; let k = 0; const lab = {};
+  cells.forEach(c => { if (c[2] === null) lab[c[0] + ',' + c[1]] = ++k; });
+  for (let r = 0; r < R; r++) { h += '<tr>'; for (let c = 0; c < C; c++) { const cc = cells.find(x => x[0] === r && x[1] === c); h += cc ? `<td style="min-width:44px;border:2px solid #555">${cc[2] !== null ? `<b>${AR(cc[2])}</b>` : `<small style="color:#999">${AR(lab[r + ',' + c])}</small>`}</td>` : '<td style="border:0"></td>'; } h += '</tr>'; }
+  h += '</table>';
+  return fld(tag, o.text || 'الحسُّ العدديّ: أكملِ الفراغَ بالعددِ المناسب (قطعةٌ من لوحةِ المئة):', cells.filter(c => c[2] === null).map((c, i) => [`الخانة ${AR(i + 1)}`, val(c)]), { html: h, skill: 'pat', sol: ['في لوحةِ المئةِ يزيدُ العددُ ١ كلّما انتقلنا خانةً إلى اليسار، ويزيدُ ١٠ كلّما نزلنا صفًّا.'], ...o }); };
